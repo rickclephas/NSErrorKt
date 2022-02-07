@@ -1,0 +1,11 @@
+package = kotlin.runtime
+---
+extern void Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types);
+
+extern void* Kotlin_Interop_unwrapKotlinObjectHolder(void* holder);
+
+extern const void* Kotlin_Any_getTypeInfo(const void* obj);
+
+extern void* Kotlin_Interop_refToObjC(void* obj);
+
+extern void Kotlin_ObjCExport_resumeContinuation(void* continuation, void* result, void* error);

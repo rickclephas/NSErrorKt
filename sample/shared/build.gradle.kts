@@ -41,6 +41,7 @@ kotlin {
         ).forEach {
             it.binaries.framework {
                 baseName = "NSErrorKtSampleShared"
+                export("com.rickclephas.kmp:nserror-kt")
             }
             getByName("${it.targetName}Main") {
                 dependsOn(appleMain)

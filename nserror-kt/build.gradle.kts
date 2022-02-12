@@ -3,7 +3,6 @@ plugins {
 }
 
 kotlin {
-    jvm() // TODO: Remove JVM target and fix build issues
     val macosX64 = macosX64()
     val macosArm64 = macosArm64()
     val iosArm64 = iosArm64()
@@ -20,10 +19,7 @@ kotlin {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
         }
-        val commonMain by getting {
-            dependencies {
-            }
-        }
+        val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))

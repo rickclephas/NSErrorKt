@@ -19,7 +19,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
-                api("com.rickclephas.kmp:nserror-kt")
             }
         }
         val commonTest by getting {
@@ -29,6 +28,9 @@ kotlin {
         }
         val appleMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                api("com.rickclephas.kmp:nserror-kt")
+            }
         }
         val appleTest by creating {
             dependsOn(commonTest)

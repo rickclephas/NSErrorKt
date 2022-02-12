@@ -3,6 +3,7 @@ package com.rickclephas.kmp.nserrorkt
 import kotlinx.cinterop.*
 import kotlin.runtime.Kotlin_ObjCExport_RethrowExceptionAsNSError
 import platform.Foundation.NSError
+import platform.darwin.NSInteger
 import platform.posix.NULL
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.EmptyCoroutineContext
@@ -58,6 +59,12 @@ private fun Throwable.throwAsNSError(shouldPropagate: Boolean): NSError = memSco
 }
 
 /**
+ * Indicates if `this` [Throwable] represents a [NSError].
+ */
+val Throwable.isNSError: Boolean
+    get() = this is ObjCErrorException
+
+/**
  * Converts `this` [NSError] to a [Throwable].
  *
  * If `this` [NSError] represents a [Throwable], the original [Throwable] is returned.
@@ -76,3 +83,10 @@ fun NSError.asThrowable(): Throwable {
     Kotlin_ObjCExport_resumeContinuation(continuation.asObjHeaderPtr(), NULL, objHeader)
     return throwable!!
 }
+
+/**
+ * Indicates if `this` [NSError] represents a [Throwable].
+ */
+@OptIn(UnsafeNumber::class)
+val NSError.isThrowable: Boolean
+    get() = domain == "KotlinException" && code == 0.convert<NSInteger>() && userInfo.containsKey("KotlinException")

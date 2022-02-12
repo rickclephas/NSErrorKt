@@ -19,7 +19,6 @@ kotlin {
     sourceSets {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
-            languageSettings.optIn("kotlin.native.internal.InternalForKotlinNative")
         }
         val commonMain by getting {
             dependencies {

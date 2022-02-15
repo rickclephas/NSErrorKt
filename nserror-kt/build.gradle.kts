@@ -18,6 +18,7 @@ kotlin {
     sourceSets {
         all {
             languageSettings.optIn("kotlin.RequiresOptIn")
+            languageSettings.optIn("kotlin.native.internal.InternalForKotlinNative")
         }
         val commonMain by getting
         val commonTest by getting {
@@ -42,9 +43,6 @@ kotlin {
             }
             getByName("${it.targetName}Test") {
                 dependsOn(appleTest)
-            }
-            it.compilations.getByName("main") {
-                cinterops.create("KotlinRuntime")
             }
         }
     }

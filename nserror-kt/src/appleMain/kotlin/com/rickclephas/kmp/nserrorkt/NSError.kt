@@ -1,16 +1,13 @@
 package com.rickclephas.kmp.nserrorkt
 
 import kotlinx.cinterop.*
-import kotlin.runtime.Kotlin_ObjCExport_RethrowExceptionAsNSError
 import platform.Foundation.NSError
 import platform.darwin.NSInteger
-import platform.posix.NULL
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.native.internal.GCUnsafeCall
 import kotlin.native.internal.ObjCErrorException
 import kotlin.reflect.KClass
-import kotlin.runtime.Kotlin_Interop_refToObjC
-import kotlin.runtime.Kotlin_ObjCExport_resumeContinuation
 
 /**
  * Converts `this` [Throwable] to a [NSError].
@@ -46,17 +43,26 @@ fun Throwable.throwAsNSError(vararg exceptionClasses: KClass<out Throwable>): NS
     throwAsNSError(exceptionClasses.any { it.isInstance(this) })
 
 private fun Throwable.throwAsNSError(shouldPropagate: Boolean): NSError = memScoped {
-    val objHeader = this@throwAsNSError.asObjHeaderPtr()
     val error = alloc<ObjCObjectVar<NSError>>()
     val types = when (shouldPropagate) {
         true -> allocArray<CPointerVar<*>>(2).apply {
-            set(0, getTypeInfo(this@throwAsNSError))
+            set(0, interpretCPointer<CPointed>(getTypeInfo(this@throwAsNSError)))
         }
         false -> allocArray(1)
     }
-    Kotlin_ObjCExport_RethrowExceptionAsNSError(objHeader, error.ptr, types)
+    rethrowExceptionAsNSError(this@throwAsNSError, error.ptr, types)
     error.value
 }
+
+@GCUnsafeCall("Kotlin_Any_getTypeInfo")
+private external fun getTypeInfo(obj: Any): NativePtr
+
+@GCUnsafeCall("Kotlin_ObjCExport_RethrowExceptionAsNSError")
+private external fun rethrowExceptionAsNSError(
+    exception: Throwable,
+    error: CPointer<ObjCObjectVar<NSError>>,
+    types: CArrayPointer<CPointerVar<*>>
+)
 
 /**
  * Indicates if `this` [Throwable] represents a [NSError].
@@ -73,16 +79,21 @@ val Throwable.isNSError: Boolean
  * @see asNSError
  */
 fun NSError.asThrowable(): Throwable {
-    // TODO: Find a better way to get the error pointer
-    val objHeader = Kotlin_Interop_refToObjC(this.asObjHeaderPtr())
     // TODO: Find a way to call Kotlin_ObjCExport_NSErrorAsException directly
     var throwable: Throwable? = null
     val continuation = Continuation<Any?>(EmptyCoroutineContext) {
         throwable = it.exceptionOrNull()
     }
-    Kotlin_ObjCExport_resumeContinuation(continuation.asObjHeaderPtr(), NULL, objHeader)
+    resumeContinuation(continuation, null, this.objcPtr())
     return throwable!!
 }
+
+@GCUnsafeCall("Kotlin_ObjCExport_resumeContinuation")
+private external fun resumeContinuation(
+    continuation: Continuation<Any?>,
+    result: Any?,
+    error: NativePtr
+)
 
 /**
  * Indicates if `this` [NSError] represents a [Throwable].

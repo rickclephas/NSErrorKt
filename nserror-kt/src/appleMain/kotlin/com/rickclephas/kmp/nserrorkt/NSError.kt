@@ -57,7 +57,7 @@ private fun Throwable.throwAsNSError(shouldPropagate: Boolean): NSError = memSco
 @GCUnsafeCall("Kotlin_Any_getTypeInfo")
 private external fun getTypeInfo(obj: Any): NativePtr
 
-@GCUnsafeCall("Kotlin_ObjCExport_RethrowExceptionAsNSError")
+@GCUnsafeCall("NSErrorKt_Kotlin_ObjCExport_RethrowExceptionAsNSError")
 private external fun rethrowExceptionAsNSError(
     exception: Throwable,
     error: CPointer<ObjCObjectVar<NSError>>,
@@ -88,7 +88,7 @@ fun NSError.asThrowable(): Throwable {
     return throwable!!
 }
 
-@GCUnsafeCall("Kotlin_ObjCExport_resumeContinuation")
+@GCUnsafeCall("NSErrorKt_Kotlin_ObjCExport_resumeContinuation")
 private external fun resumeContinuation(
     continuation: Continuation<Any?>,
     result: Any?,

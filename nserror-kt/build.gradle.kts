@@ -38,6 +38,9 @@ kotlin {
             watchosArm32, watchosArm64, watchosX64, watchosSimulatorArm64,
             tvosArm64, tvosX64, tvosSimulatorArm64
         ).forEach {
+            it.compilations.getByName("main") {
+                cinterops.create("NSErrorKtRuntime")
+            }
             getByName("${it.targetName}Main") {
                 dependsOn(appleMain)
             }

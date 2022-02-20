@@ -1,0 +1,12 @@
+---
+extern void Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types);
+
+void NSErrorKt_Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types) {
+    Kotlin_ObjCExport_RethrowExceptionAsNSError(exception, outError, types);
+}
+
+extern void Kotlin_ObjCExport_resumeContinuation(void* continuation, void* result, void* error);
+
+void NSErrorKt_Kotlin_ObjCExport_resumeContinuation(void* continuation, void* result, void* error) {
+    Kotlin_ObjCExport_resumeContinuation(continuation, result, error);
+}

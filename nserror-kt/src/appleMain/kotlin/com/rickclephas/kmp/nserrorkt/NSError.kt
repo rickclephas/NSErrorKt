@@ -3,8 +3,6 @@ package com.rickclephas.kmp.nserrorkt
 import kotlinx.cinterop.*
 import platform.Foundation.NSError
 import platform.darwin.NSInteger
-import kotlin.coroutines.Continuation
-import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.native.internal.GCUnsafeCall
 import kotlin.native.internal.ObjCErrorException
 import kotlin.reflect.KClass
@@ -78,22 +76,10 @@ val Throwable.isNSError: Boolean
  *
  * @see asNSError
  */
-fun NSError.asThrowable(): Throwable {
-    // TODO: Find a way to call Kotlin_ObjCExport_NSErrorAsException directly
-    var throwable: Throwable? = null
-    val continuation = Continuation<Any?>(EmptyCoroutineContext) {
-        throwable = it.exceptionOrNull()
-    }
-    resumeContinuation(continuation, null, this.objcPtr())
-    return throwable!!
-}
+fun NSError.asThrowable(): Throwable = nsErrorAsException(this.objcPtr())
 
-@GCUnsafeCall("NSErrorKt_Kotlin_ObjCExport_resumeContinuation")
-private external fun resumeContinuation(
-    continuation: Continuation<Any?>,
-    result: Any?,
-    error: NativePtr
-)
+@GCUnsafeCall("NSErrorKt_Kotlin_ObjCExport_NSErrorAsException")
+private external fun nsErrorAsException(error: NativePtr): Throwable
 
 /**
  * Indicates if `this` [NSError] represents a [Throwable].

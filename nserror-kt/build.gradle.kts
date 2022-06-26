@@ -1,7 +1,7 @@
 plugins {
     @Suppress("DSL_SCOPE_VIOLATION")
     alias(libs.plugins.kotlin.multiplatform)
-    `maven-publish`
+    `nserror-kt-publish`
 }
 
 kotlin {

@@ -14,3 +14,11 @@ includeBuild("..") {
         substitute(module("com.rickclephas.kmp:nserror-kt")).using(project(":nserror-kt"))
     }
 }
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
+}

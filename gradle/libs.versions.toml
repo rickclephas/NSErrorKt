@@ -1,0 +1,9 @@
+[versions]
+kotlin = "1.6.20"
+
+[libraries]
+# Sample libraries
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.6.0-native-mt" }
+
+[plugins]
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

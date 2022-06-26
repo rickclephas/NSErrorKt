@@ -1,5 +1,6 @@
 plugins {
-    kotlin("multiplatform")
+    @Suppress("DSL_SCOPE_VIOLATION")
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
@@ -18,7 +19,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0-native-mt")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
         val commonTest by getting {

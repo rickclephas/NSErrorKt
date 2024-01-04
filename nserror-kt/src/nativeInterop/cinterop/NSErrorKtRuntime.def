@@ -1,12 +1,54 @@
 ---
+
+#include "stdint.h"
+#include "stddef.h"
+
+// Based on Kotlin Native runtime
+
+typedef struct ObjHeader ObjHeader;
+
+typedef struct FrameOverlay {
+  struct FrameOverlay* previous;
+  int32_t parameters;
+  int32_t count;
+} FrameOverlay;
+
+typedef struct ObjHolder {
+    FrameOverlay frame_;
+    ObjHeader* obj_;
+} ObjHolder;
+
+extern void EnterFrame(ObjHeader** start, int parameters, int count) __attribute__((nothrow));
+extern void LeaveFrame(ObjHeader** start, int parameters, int count) __attribute__((nothrow));
+
+static void NSErrorKt_Kotlin_ObjCExport_ObjHolder_init(ObjHolder* this) {
+    this->obj_ = NULL;
+    EnterFrame((ObjHeader**) &(this->frame_), 0, sizeof(*this)/sizeof(void*));
+}
+
+static void NSErrorKt_Kotlin_ObjCExport_ObjHolder_deinit(ObjHolder* this) {
+    LeaveFrame((ObjHeader**) &(this->frame_), 0, sizeof(*this)/sizeof(void*));
+}
+
 extern void Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types);
+
+extern void* Kotlin_ObjCExport_NSErrorAsException(void* error, ObjHeader** OBJ_RESULT);
+
+// Bridge implementation
 
 void NSErrorKt_Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types) {
     Kotlin_ObjCExport_RethrowExceptionAsNSError(exception, outError, types);
 }
 
-extern void* Kotlin_ObjCExport_NSErrorAsException(void* error);
-
 void* NSErrorKt_Kotlin_ObjCExport_NSErrorAsException(void* error) {
-    return Kotlin_ObjCExport_NSErrorAsException(error);
+    void* result;
+    ObjHolder holder;
+
+    NSErrorKt_Kotlin_ObjCExport_ObjHolder_init(&holder);
+
+    result = Kotlin_ObjCExport_NSErrorAsException(error, &(holder.obj_));
+
+    NSErrorKt_Kotlin_ObjCExport_ObjHolder_deinit(&holder);
+
+    return result;
 }

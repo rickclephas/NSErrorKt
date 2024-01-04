@@ -47,6 +47,16 @@ class NSErrorKtSampleTests: XCTestCase {
         XCTAssertTrue(NSErrorKt.isThrowable(nsError))
     }
     
+    func testCatchThrowable() {
+        do {
+            try NSErrorTestsKt.throwIllegalArgumentException()
+        } catch {
+            XCTAssertTrue(NSErrorKt.isThrowable(error))
+            let throwable = NSErrorKt.asThrowable(error)
+            XCTAssertEqual("Fancy thrown exception", throwable.message)
+        }
+    }
+    
 //    func testThrowTerminatingThrowable() {
 //        let error = NSErrorTestsKt.testAsNSError()
 //        let throwable = NSErrorKt.asThrowable(error)

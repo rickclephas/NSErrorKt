@@ -5,6 +5,8 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(11)
+
     listOf(
         macosX64(), macosArm64(),
         iosArm64(), iosX64(), iosSimulatorArm64(),
@@ -15,6 +17,7 @@ kotlin {
             cinterops.create("NSErrorKtRuntime")
         }
     }
+
     sourceSets {
         all {
             languageSettings {

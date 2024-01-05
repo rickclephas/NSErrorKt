@@ -134,7 +134,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1D76993927B461DC00DA3343 /* Build configuration list for PBXNativeTarget "NSErrorKtSample" */;
 			buildPhases = (
-				1D76994227B4625B00DA3343 /* ShellScript */,
+				1D76994227B4625B00DA3343 /* Build NSErrorKtSampleShared */,
 				1D76991127B461DC00DA3343 /* Sources */,
 				1D76991227B461DC00DA3343 /* Frameworks */,
 				1D76991327B461DC00DA3343 /* Resources */,
@@ -255,8 +255,9 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1D76994227B4625B00DA3343 /* ShellScript */ = {
+		1D76994227B4625B00DA3343 /* Build NSErrorKtSampleShared */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -264,6 +265,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Build NSErrorKtSampleShared";
 			outputFileListPaths = (
 			);
 			outputPaths = (

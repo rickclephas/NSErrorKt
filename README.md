@@ -72,7 +72,7 @@ kotlin {
     sourceSets {
         appleMain {
             dependencies {
-                api("com.rickclephas.kmp:nserror-kt:0.1.0")
+                api("com.rickclephas.kmp:nserror-kt:0.2.0")
             }
         }
     }
@@ -85,7 +85,7 @@ kotlin {
     targets.withType(KotlinNativeTarget::class) {
         if (!konanTarget.family.isAppleFamily) return@withType
         binaries.framework {
-            export("com.rickclephas.kmp:nserror-kt:0.1.0")
+            export("com.rickclephas.kmp:nserror-kt:0.2.0")
         }
     }
 }

@@ -19,8 +19,11 @@ kotlin {
     val tvosSimulatorArm64 = tvosSimulatorArm64()
     sourceSets {
         all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
-            languageSettings.optIn("kotlin.native.internal.InternalForKotlinNative")
+            languageSettings {
+                optIn("kotlin.RequiresOptIn")
+                optIn("kotlin.native.internal.InternalForKotlinNative")
+                optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            }
         }
         val commonMain by getting
         val commonTest by getting {

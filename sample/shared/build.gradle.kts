@@ -3,6 +3,8 @@ plugins {
 }
 
 kotlin {
+    explicitApi()
+
     listOf(
         macosX64(), macosArm64(),
         iosArm64(), iosX64(), iosSimulatorArm64(),
@@ -14,6 +16,7 @@ kotlin {
             export("com.rickclephas.kmp:nserror-kt")
         }
     }
+
     sourceSets {
         commonMain {
             dependencies {

@@ -4,16 +4,16 @@ import platform.Foundation.NSError
 import com.rickclephas.kmp.nserrorkt.*
 import kotlinx.coroutines.*
 
-fun testAsNSError(): NSError {
+public fun testAsNSError(): NSError {
     return IllegalArgumentException("Fancy exception").asNSError()
 }
 
-fun getCancellationException(): CancellationException = CancellationException()
+public fun getCancellationException(): CancellationException = CancellationException()
 
-fun testThrowAsNSError(throwable: Throwable): NSError {
+public fun testThrowAsNSError(throwable: Throwable): NSError {
     return throwable.throwAsNSError(CancellationException::class)
 }
 
-fun testAsThrowable(nsError: NSError): Throwable {
+public fun testAsThrowable(nsError: NSError): Throwable {
     return nsError.asThrowable()
 }

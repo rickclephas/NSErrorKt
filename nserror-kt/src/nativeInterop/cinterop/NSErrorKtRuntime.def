@@ -40,7 +40,7 @@ extern void Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* o
 
 // https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/ObjCExportErrors.mm#L110
 // https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L169
-extern void* Kotlin_ObjCExport_NSErrorAsException(void* error, ObjHeader** OBJ_RESULT);
+extern ObjHeader* Kotlin_ObjCExport_NSErrorAsException(void* error, ObjHeader** OBJ_RESULT);
 
 // Bridge implementation
 
@@ -48,8 +48,8 @@ void NSErrorKt_Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void
     Kotlin_ObjCExport_RethrowExceptionAsNSError(exception, outError, types);
 }
 
-void* NSErrorKt_Kotlin_ObjCExport_NSErrorAsException(void* error) {
-    void* result;
+ObjHeader* NSErrorKt_Kotlin_ObjCExport_NSErrorAsException(void* error) {
+    ObjHeader* result;
     ObjHolder holder;
 
     NSErrorKt_ObjHolder_init(&holder);

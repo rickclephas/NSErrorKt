@@ -1,5 +1,5 @@
 [versions]
-kotlin = "1.6.20"
+kotlin = "1.9.22"
 
 [libraries]
 # Sample libraries

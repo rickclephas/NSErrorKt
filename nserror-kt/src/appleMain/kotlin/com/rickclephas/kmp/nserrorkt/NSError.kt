@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
  * @see throwAsNSError
  * @see asThrowable
  */
-fun Throwable.asNSError(): NSError = throwAsNSError(true)
+public fun Throwable.asNSError(): NSError = throwAsNSError(true)
 
 /**
  * Tries to convert `this` [Throwable] to a [NSError].
@@ -37,7 +37,7 @@ fun Throwable.asNSError(): NSError = throwAsNSError(true)
  * @see asThrowable
  * @see Throws
  */
-fun Throwable.throwAsNSError(vararg exceptionClasses: KClass<out Throwable>): NSError =
+public fun Throwable.throwAsNSError(vararg exceptionClasses: KClass<out Throwable>): NSError =
     throwAsNSError(exceptionClasses.any { it.isInstance(this) })
 
 private fun Throwable.throwAsNSError(shouldPropagate: Boolean): NSError = memScoped {
@@ -65,7 +65,7 @@ private external fun rethrowExceptionAsNSError(
 /**
  * Indicates if `this` [Throwable] represents a [NSError].
  */
-val Throwable.isNSError: Boolean
+public val Throwable.isNSError: Boolean
     get() = this is ObjCErrorException
 
 /**
@@ -76,7 +76,7 @@ val Throwable.isNSError: Boolean
  *
  * @see asNSError
  */
-fun NSError.asThrowable(): Throwable = nsErrorAsException(this.objcPtr())
+public fun NSError.asThrowable(): Throwable = nsErrorAsException(this.objcPtr())
 
 @GCUnsafeCall("NSErrorKt_Kotlin_ObjCExport_NSErrorAsException")
 private external fun nsErrorAsException(error: NativePtr): Throwable
@@ -85,5 +85,5 @@ private external fun nsErrorAsException(error: NativePtr): Throwable
  * Indicates if `this` [NSError] represents a [Throwable].
  */
 @OptIn(UnsafeNumber::class)
-val NSError.isThrowable: Boolean
+public val NSError.isThrowable: Boolean
     get() = domain == "KotlinException" && code == 0.convert<NSInteger>() && userInfo.containsKey("KotlinException")

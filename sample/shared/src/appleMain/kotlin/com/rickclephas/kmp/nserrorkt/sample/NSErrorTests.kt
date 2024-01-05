@@ -11,7 +11,7 @@ public fun testAsNSError(): NSError {
 public fun getCancellationException(): CancellationException = CancellationException()
 
 @Throws(IllegalArgumentException::class)
-fun throwIllegalArgumentException() {
+public fun throwIllegalArgumentException() {
     throw IllegalArgumentException("Fancy thrown exception")
 }
 

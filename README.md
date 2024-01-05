@@ -2,9 +2,6 @@
 
 A Kotlin Multiplatform Library to improve `NSError` interop.
 
-> **WARNING:** This is an experiment to try and improve Kotlin's `NSError` interop.  
-> To achieve this the library exposes some Kotlin internals that aren't part of any public API!
-
 ## Why do we need this?
 
 Kotlin already has `Throwable` to `NSError` interop for straightforward cases as described in 
@@ -57,9 +54,46 @@ And in case such an `NSError` reaches Kotlin again it will be wrapped in an `Exc
 
 So depending on your code this might result in hard to log errors as well.
 
+## Compatibility
+
+The latest version of the library uses Kotlin version `1.9.22`.
+
+> [!WARNING]
+> This library exposes the Kotlin `NSError` interop logic provided by the Kotlin Native runtime.  
+> These internals aren't part of any public API and are considered to be an implementation detail!  
+> Use at your own risk and beware that using the library with other Kotlin versions might not work as expected.
+
+## Installation
+
+Simply add the dependency to the `appleMain` source-set of your Kotlin module: 
+
+```kotlin
+kotlin {
+    sourceSets {
+        appleMain {
+            dependencies {
+                api("com.rickclephas.kmp:nserror-kt:0.1.0")
+            }
+        }
+    }
+}
+```
+
+If you want to use the library in your Swift code, make sure to export it from your shared Kotlin module:
+```kotlin
+kotlin {
+    targets.withType(KotlinNativeTarget::class) {
+        if (!konanTarget.family.isAppleFamily) return@withType
+        binaries.framework {
+            export("com.rickclephas.kmp:nserror-kt:0.1.0")
+        }
+    }
+}
+```
+
 ## Usage
 
-To solve these issues this library exposes the Kotlin `NSError` interop logic to your application and library code.
+To solve the interop issues this library exposes the Kotlin `NSError` interop logic to your application and library code.
 
 Consisting of 3 extension functions:
 - [`Throwable.asNSError`](#asnserror)

@@ -1,10 +1,11 @@
 plugins {
-    @Suppress("DSL_SCOPE_VIOLATION")
     alias(libs.plugins.kotlin.multiplatform)
     `nserror-kt-publish`
 }
 
 kotlin {
+    jvmToolchain(11)
+
     listOf(
         macosX64(), macosArm64(),
         iosArm64(), iosX64(), iosSimulatorArm64(),
@@ -15,6 +16,7 @@ kotlin {
             cinterops.create("NSErrorKtRuntime")
         }
     }
+
     sourceSets {
         all {
             languageSettings {

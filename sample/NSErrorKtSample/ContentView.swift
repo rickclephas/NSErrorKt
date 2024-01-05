@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import NSErrorKtSampleShared
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        Button("Catch Throwable") {
+            do {
+                try NSErrorTestsKt.throwIllegalArgumentException()
+            } catch {
+                print(NSErrorKt.asThrowable(error))
+            }
+        }
     }
 }
 

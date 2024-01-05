@@ -1,12 +1,62 @@
 ---
+
+#include "stdint.h"
+#include "stddef.h"
+
+// Based on Kotlin Native runtime
+
+typedef struct ObjHeader ObjHeader;
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L364-L369
+typedef struct FrameOverlay {
+  struct FrameOverlay* previous;
+  int32_t parameters;
+  int32_t count;
+} FrameOverlay;
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L400-L401
+typedef struct ObjHolder {
+    FrameOverlay frame_;
+    ObjHeader* obj_;
+} ObjHolder;
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L279-L282
+extern void EnterFrame(ObjHeader** start, int parameters, int count) __attribute__((nothrow));
+extern void LeaveFrame(ObjHeader** start, int parameters, int count) __attribute__((nothrow));
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L374-L376
+static void NSErrorKt_ObjHolder_init(ObjHolder* this) {
+    this->obj_ = NULL;
+    EnterFrame((ObjHeader**) &(this->frame_), 0, sizeof(*this)/sizeof(void*));
+}
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L383-L385
+static void NSErrorKt_ObjHolder_deinit(ObjHolder* this) {
+    LeaveFrame((ObjHeader**) &(this->frame_), 0, sizeof(*this)/sizeof(void*));
+}
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/ObjCExportErrors.mm#L103
 extern void Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types);
+
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/ObjCExportErrors.mm#L110
+// https://github.com/JetBrains/kotlin/blob/44ed2e94f57d63b380a81ad9dceba95b57f2f33d/kotlin-native/runtime/src/main/cpp/Memory.h#L169
+extern ObjHeader* Kotlin_ObjCExport_NSErrorAsException(void* error, ObjHeader** OBJ_RESULT);
+
+// Bridge implementation
 
 void NSErrorKt_Kotlin_ObjCExport_RethrowExceptionAsNSError(void* exception, void* outError, const void** types) {
     Kotlin_ObjCExport_RethrowExceptionAsNSError(exception, outError, types);
 }
 
-extern void* Kotlin_ObjCExport_NSErrorAsException(void* error);
+ObjHeader* NSErrorKt_Kotlin_ObjCExport_NSErrorAsException(void* error) {
+    ObjHeader* result;
+    ObjHolder holder;
 
-void* NSErrorKt_Kotlin_ObjCExport_NSErrorAsException(void* error) {
-    return Kotlin_ObjCExport_NSErrorAsException(error);
+    NSErrorKt_ObjHolder_init(&holder);
+
+    result = Kotlin_ObjCExport_NSErrorAsException(error, &(holder.obj_));
+
+    NSErrorKt_ObjHolder_deinit(&holder);
+
+    return result;
 }

@@ -10,6 +10,11 @@ public fun testAsNSError(): NSError {
 
 public fun getCancellationException(): CancellationException = CancellationException()
 
+@Throws(IllegalArgumentException::class)
+public fun throwIllegalArgumentException() {
+    throw IllegalArgumentException("Fancy thrown exception")
+}
+
 public fun testThrowAsNSError(throwable: Throwable): NSError {
     return throwable.throwAsNSError(CancellationException::class)
 }
